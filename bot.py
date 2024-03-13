@@ -10,7 +10,7 @@ nodos = {
   "OW": "Armas de los oponentes (Armado o Desarmado)",
   "HN": "Sonido detectado (SeOye o NoSeOye)",
   "NE": "Enemigos cercanos (Si o No)",
-  "PW": "Arma cercanac(Si o No)",
+  "PW": "Arma cercana (Si o No)",
   "PH": "Paquete de salud cercano (Si o No)",
 }
 mode_of_use = input("¿Desea ingresar los valores de los nodos (0) o desea el modo de tender al infinito? (1): ")
@@ -34,26 +34,10 @@ else:
   net.set_evidence("PH", "Si")
   net.update_beliefs()
   for _ in range(1000):
-    # Actualizar las creencias en la red
     net.update_beliefs()  
   distribucion_St_despues_iteraciones = net.get_node_value("St")
   outcomes = [net.get_outcome_id("St", i) for i in range(len(distribucion_St_despues_iteraciones))]
   print("Estado del bot después de 1000 iteraciones:")
   for outcome, probability in zip(outcomes, distribucion_St_despues_iteraciones):
     print(f"P(St={outcome}) = {probability}")
-
-
-"""h = net.get_first_node()
-print(net.get_node_value(h))
-net.set_evidence("H", "Alto")
-net.set_evidence("W", "Armado")
-net.set_evidence("OW", "Armado")
-net.set_evidence("HN", "SeOye")
-net.set_evidence("NE", "Si")
-net.set_evidence("PW", "Si")
-net.set_evidence("PH", "Si")
-net.update_beliefs()
-beliefs = net.get_node_value("St_1")
-for i in range(0, len(beliefs)):
-  print(net.get_outcome_id("St_1", i) + ": " + str(beliefs[i]))"""
 
