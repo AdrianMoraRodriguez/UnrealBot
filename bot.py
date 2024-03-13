@@ -4,7 +4,7 @@ import pysmile
 net = pysmile.Network()
 net.read_file("data/red_bayesiana.xdsl")
 nodos = {
-  "St": "Estado en tiempo t (Atacar, Recoger Armas, Recoger Energia, Explorar, Huir, Detectar peligro)",
+  "St": "Estado en tiempo t (Atacar, Recoger_Arma, Recoger_Energia, Explorar, Huir, Detectar_peligro)",
   "H": "Nivel de salud (Alto o Bajo)",
   "W": "Armas del bot (Armado o Desarmado)",
   "OW": "Armas de los oponentes (Armado o Desarmado)",
@@ -40,4 +40,3 @@ else:
   print("Estado del bot después de 1000 iteraciones:")
   for outcome, probability in zip(outcomes, distribucion_St_despues_iteraciones):
     print(f"P(St={outcome}) = {probability}")
-
