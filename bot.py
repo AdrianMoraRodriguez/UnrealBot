@@ -14,7 +14,7 @@ nodos = {
   "PH": "Paquete de salud cercano (Si o No)",
 }
 mode_of_use = input("¿Desea ingresar los valores de los nodos (0) o desea el modo de tender al infinito? (1): ")
-if (mode_of_use == "0"):
+if (mode_of_use == "0"): 
   valores_usuario = {}
   for nodo in nodos:
     valores_usuario[nodo] = input(f"Ingrese el valor para {nodos[nodo]}: ")
@@ -24,7 +24,9 @@ if (mode_of_use == "0"):
   distribucion_St1_dado_St = net.get_node_value("St_1")
   for i in range(len(distribucion_St1_dado_St)):
     print(f"P(St+1={net.get_outcome_id('St_1', i)} | St, H, W, OW, HN, NE, PW, PH) = {distribucion_St1_dado_St[i]}")
-else:
+elif (mode_of_use == "1"):
+  net.clear_all_evidence()
+  net.update_beliefs()
   net.set_evidence("H", "Alto")
   net.set_evidence("W", "Armado")
   net.set_evidence("OW", "Armado")
@@ -35,8 +37,8 @@ else:
   net.update_beliefs()
   for _ in range(1000):
     net.update_beliefs()  
-  distribucion_St_despues_iteraciones = net.get_node_value("St")
-  outcomes = [net.get_outcome_id("St", i) for i in range(len(distribucion_St_despues_iteraciones))]
+  distribucion_St_1_despues_iteraciones = net.get_node_value("St_1")
+  outcomes = [net.get_outcome_id("St_1", i) for i in range(len(distribucion_St_1_despues_iteraciones))]
   print("Estado del bot después de 1000 iteraciones:")
-  for outcome, probability in zip(outcomes, distribucion_St_despues_iteraciones):
-    print(f"P(St={outcome}) = {probability}")
+  for outcome, probability in zip(outcomes, distribucion_St_1_despues_iteraciones):
+    print(f"P(St_1={outcome}) = {probability}")
