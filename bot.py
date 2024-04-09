@@ -13,7 +13,7 @@ nodos = {
   "PW": "Arma cercana (Si o No)",
   "PH": "Paquete de salud cercano (Si o No)",
 }
-mode_of_use = input("¿Desea ingresar los valores de los nodos (0) o desea el modo de tender al infinito? (1): ")
+mode_of_use = input("¿Desea ingresar los valores de los nodos (0), el modo de tender al infinito? (1) o el modo aprendizaje? (3): ")
 if (mode_of_use == "0"): 
   valores_usuario = {}
   for nodo in nodos:
@@ -42,3 +42,27 @@ elif (mode_of_use == "1"):
   print("Estado del bot después de 1000 iteraciones:")
   for outcome, probability in zip(outcomes, distribucion_St_1_despues_iteraciones):
     print(f"P(St_1={outcome}) = {probability}")
+else:
+  datos = open("data/datos_aprendizaje.txt", "r")
+  #primera fila se separan los nombres de las tablas por comas
+  nombres_tablas = datos.readline().split(",")
+  #Se crea un diccionario con un diccionario por cada tabla
+  tablas = {}
+  for nombre_tabla in nombres_tablas:
+    tablas[nombre_tabla] = {}
+  #Se recorre el archivo para llenar los diccionarios
+  for linea in datos:
+    valores = linea.split(",")
+    for i in range(len(valores)):
+      #Se suma uno al valor de la tabla correspondiente
+      tablas[nombres_tablas[i]][valores[i]] = tablas[nombres_tablas[i]].get(valores[i], 0) + 1
+  #Se calculan las probabilidades
+  for tabla in tablas:
+    total = sum(tablas[tabla].values())
+    for valor in tablas[tabla]:
+      tablas[tabla][valor] /= total
+  #Se imprimen las probabilidades
+  for tabla in tablas:
+    print(f"Probabilidad de {tabla}:")
+    for valor, probabilidad in tablas[tabla].items():
+      print(f"P({valor}) = {probabilidad}")
