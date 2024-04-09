@@ -44,25 +44,24 @@ elif (mode_of_use == "1"):
     print(f"P(St_1={outcome}) = {probability}")
 else:
   datos = open("data/datos_aprendizaje.txt", "r")
-  #primera fila se separan los nombres de las tablas por comas
   nombres_tablas = datos.readline().split(",")
-  #Se crea un diccionario con un diccionario por cada tabla
   tablas = {}
   for nombre_tabla in nombres_tablas:
     tablas[nombre_tabla] = {}
-  #Se recorre el archivo para llenar los diccionarios
   for linea in datos:
     valores = linea.split(",")
     for i in range(len(valores)):
-      #Se suma uno al valor de la tabla correspondiente
       tablas[nombres_tablas[i]][valores[i]] = tablas[nombres_tablas[i]].get(valores[i], 0) + 1
-  #Se calculan las probabilidades
   for tabla in tablas:
     total = sum(tablas[tabla].values())
     for valor in tablas[tabla]:
       tablas[tabla][valor] /= total
-  #Se imprimen las probabilidades
   for tabla in tablas:
-    print(f"Probabilidad de {tabla}:")
+    if (tabla[-1] == "\n"):
+        print("Probabilidad de " + tabla[:-1] + ":")
+    else:
+      print("Probabilidad de " + tabla + ":")
     for valor, probabilidad in tablas[tabla].items():
-      print(f"P({valor}) = {probabilidad}")
+      if (valor[-1] == "\n"):
+        valor = valor[:-1]
+      print("P(" + valor + ") = " + str(probabilidad))
