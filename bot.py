@@ -56,33 +56,38 @@ else:
     total = sum(tablas[tabla].values())
     for valor in tablas[tabla]:
       tablas[tabla][valor] /= total
-  # Hacer las tablas condicionadas a st+1
   tablas_condicionadas = {}
   for nombre_tabla in nombres_tablas:
     tablas_condicionadas[nombre_tabla] = {}
-  for i in range(len(nombres_tablas)):
-    for j in range(len(nombres_tablas)):
-      if (i != j):
-        tablas_condicionadas[nombres_tablas[j]][nombres_tablas[i]] = {}
-        for valor_i in tablas[nombres_tablas[i]]:
-          tablas_condicionadas[nombres_tablas[j]][nombres_tablas[i]][valor_i] = {}
-          for valor_j in tablas[nombres_tablas[j]]:
-            tablas_condicionadas[nombres_tablas[j]][nombres_tablas[i]][valor_i][valor_j] = 0
+  for nombre_tabla in nombres_tablas:
+    if (nombre_tabla == "st_1" or nombre_tabla == "St"):
+      tablas_condicionadas[nombre_tabla] = tablas[nombre_tabla]
+      continue
+    for valor in tablas["st_1"]:
+      tablas_condicionadas[nombre_tabla][valor] = {}
+      for valor2 in tablas[nombre_tabla]:
+        tablas_condicionadas[nombre_tabla][valor][valor2] = 0
+  datos.seek(0)
+  datos.readline()
   for linea in datos:
     valores = linea.split(",")
-    for i in range(len(valores) - 1):
-      tablas_condicionadas[nombres_tablas[-1]][nombres_tablas[i]][valores[i]][valores[-1]] += 1
-  for tabla in tablas_condicionadas:
-    for tabla_condicionada in tablas_condicionadas[tabla]:
-      total = sum(tablas[tabla_condicionada].values())
-      for valor in tablas[tabla_condicionada]:
-        for valor_condicionado in tablas[tabla][valor]:
-          tablas_condicionadas[tabla][tabla_condicionada][valor][valor_condicionado] /= total
-  # Impresión de las tablas condicionadas
-  print("Tablas condicionadas:")
-  for tabla in tablas_condicionadas:
-    for tabla_condicionada in tablas_condicionadas[tabla]:
-      print(f"P({tabla} | {tabla_condicionada})")
-      for valor in tablas_condicionadas[tabla][tabla_condicionada]:
-        for valor_condicionado in tablas_condicionadas[tabla][tabla_condicionada][valor]:
-          print(f"P({tabla}={valor} | {tabla_condicionada}={valor_condicionado}) = {tablas_condicionadas[tabla][tabla_condicionada][valor][valor_condicionado]}")
+    for i in range(len(valores)):
+      if (i == 6 or i == 7):
+        continue
+      else:
+        tablas_condicionadas[nombres_tablas[i]][valores[7]][valores[i]] += 1
+  for nombre_tabla in nombres_tablas:
+    if (nombre_tabla == "st_1" or nombre_tabla == "St"):
+      continue
+    for valor in tablas_condicionadas[nombre_tabla]:
+      total = sum(tablas_condicionadas[nombre_tabla][valor].values())
+      for valor2 in tablas_condicionadas[nombre_tabla][valor]:
+        if (tablas_condicionadas[nombre_tabla][valor][valor2] == 0):
+          continue
+        tablas_condicionadas[nombre_tabla][valor][valor2] /= total
+  for nombre_tabla in nombres_tablas:
+    if (nombre_tabla == "st_1" or nombre_tabla == "St"):
+      continue
+    print(f"Tabla condicionada de {nombre_tabla} dado St:")
+    for valor in tablas_condicionadas[nombre_tabla]:
+      print(f"P({nombre_tabla}={valor} | St) = {tablas_condicionadas[nombre_tabla][valor]}")
