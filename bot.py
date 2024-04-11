@@ -56,12 +56,33 @@ else:
     total = sum(tablas[tabla].values())
     for valor in tablas[tabla]:
       tablas[tabla][valor] /= total
-  for tabla in tablas:
-    if (tabla[-1] == "\n"):
-        print("Probabilidad de " + tabla[:-1] + ":")
-    else:
-      print("Probabilidad de " + tabla + ":")
-    for valor, probabilidad in tablas[tabla].items():
-      if (valor[-1] == "\n"):
-        valor = valor[:-1]
-      print("P(" + valor + ") = " + str(probabilidad))
+  # Hacer las tablas condicionadas a st+1
+  tablas_condicionadas = {}
+  for nombre_tabla in nombres_tablas:
+    tablas_condicionadas[nombre_tabla] = {}
+  for i in range(len(nombres_tablas)):
+    for j in range(len(nombres_tablas)):
+      if (i != j):
+        tablas_condicionadas[nombres_tablas[j]][nombres_tablas[i]] = {}
+        for valor_i in tablas[nombres_tablas[i]]:
+          tablas_condicionadas[nombres_tablas[j]][nombres_tablas[i]][valor_i] = {}
+          for valor_j in tablas[nombres_tablas[j]]:
+            tablas_condicionadas[nombres_tablas[j]][nombres_tablas[i]][valor_i][valor_j] = 0
+  for linea in datos:
+    valores = linea.split(",")
+    for i in range(len(valores) - 1):
+      tablas_condicionadas[nombres_tablas[-1]][nombres_tablas[i]][valores[i]][valores[-1]] += 1
+  for tabla in tablas_condicionadas:
+    for tabla_condicionada in tablas_condicionadas[tabla]:
+      total = sum(tablas[tabla_condicionada].values())
+      for valor in tablas[tabla_condicionada]:
+        for valor_condicionado in tablas[tabla][valor]:
+          tablas_condicionadas[tabla][tabla_condicionada][valor][valor_condicionado] /= total
+  # Impresión de las tablas condicionadas
+  print("Tablas condicionadas:")
+  for tabla in tablas_condicionadas:
+    for tabla_condicionada in tablas_condicionadas[tabla]:
+      print(f"P({tabla} | {tabla_condicionada})")
+      for valor in tablas_condicionadas[tabla][tabla_condicionada]:
+        for valor_condicionado in tablas_condicionadas[tabla][tabla_condicionada][valor]:
+          print(f"P({tabla}={valor} | {tabla_condicionada}={valor_condicionado}) = {tablas_condicionadas[tabla][tabla_condicionada][valor][valor_condicionado]}")
