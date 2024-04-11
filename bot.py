@@ -45,6 +45,8 @@ elif (mode_of_use == "1"):
 else:
   datos = open("data/datos_aprendizaje.txt", "r")
   nombres_tablas = datos.readline().split(",")
+  # Eliminar el salto de línea
+  nombres_tablas[-1] = nombres_tablas[-1][:-1]
   tablas = {}
   for nombre_tabla in nombres_tablas:
     tablas[nombre_tabla] = {}
@@ -60,9 +62,14 @@ else:
   for nombre_tabla in nombres_tablas:
     tablas_condicionadas[nombre_tabla] = {}
   for nombre_tabla in nombres_tablas:
-    if (nombre_tabla == "st_1" or nombre_tabla == "St"):
+    if (nombre_tabla == "St"):
       tablas_condicionadas[nombre_tabla] = tablas[nombre_tabla]
       continue
+    if (nombre_tabla == "st_1"):
+      for valor in tablas["St"]:
+        tablas_condicionadas[nombre_tabla][valor] = {}
+        for valor2 in tablas[nombre_tabla]:
+          tablas_condicionadas[nombre_tabla][valor][valor2] = 0
     for valor in tablas["st_1"]:
       tablas_condicionadas[nombre_tabla][valor] = {}
       for valor2 in tablas[nombre_tabla]:
@@ -72,12 +79,22 @@ else:
   for linea in datos:
     valores = linea.split(",")
     for i in range(len(valores)):
-      if (i == 6 or i == 7):
+      if (i == 6):
         continue
+      elif (i == 7):
+        tablas_condicionadas[nombres_tablas[i]][valores[6]][valores[i]] += 1
       else:
         tablas_condicionadas[nombres_tablas[i]][valores[7]][valores[i]] += 1
   for nombre_tabla in nombres_tablas:
-    if (nombre_tabla == "st_1" or nombre_tabla == "St"):
+    if (nombre_tabla == "St"):
+      continue
+    if (nombre_tabla == "st_1"):
+      for valor in tablas_condicionadas[nombre_tabla]:
+        total = sum(tablas_condicionadas[nombre_tabla][valor].values())
+        for valor2 in tablas_condicionadas[nombre_tabla][valor]:
+          if (tablas_condicionadas[nombre_tabla][valor][valor2] == 0):
+            continue
+          tablas_condicionadas[nombre_tabla][valor][valor2] /= total
       continue
     for valor in tablas_condicionadas[nombre_tabla]:
       total = sum(tablas_condicionadas[nombre_tabla][valor].values())
@@ -86,8 +103,16 @@ else:
           continue
         tablas_condicionadas[nombre_tabla][valor][valor2] /= total
   for nombre_tabla in nombres_tablas:
-    if (nombre_tabla == "st_1" or nombre_tabla == "St"):
+    if (nombre_tabla == "St"):
+      print(f"Tabla de {nombre_tabla}:")
+      for valor in tablas[nombre_tabla]:
+        print(f"P({nombre_tabla}={valor}) = {tablas[nombre_tabla][valor]}")
       continue
-    print(f"Tabla condicionada de {nombre_tabla} dado St:")
+    elif (nombre_tabla == "st_1"):
+      print(f"Tabla condicionada de {nombre_tabla} dado St:")
+      for valor in tablas_condicionadas[nombre_tabla]:
+        print(f"P({nombre_tabla}={valor} | St) = {tablas_condicionadas[nombre_tabla][valor]}")
+      continue
+    print(f"Tabla condicionada de {nombre_tabla} dado St + 1:")
     for valor in tablas_condicionadas[nombre_tabla]:
       print(f"P({nombre_tabla}={valor} | St) = {tablas_condicionadas[nombre_tabla][valor]}")
